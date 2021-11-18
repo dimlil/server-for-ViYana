@@ -1,9 +1,12 @@
+import cookieParser from "cookie-parser";
 import express from "express";
-const app = express();
-app.get('/',(req,res)=>{
-    res.send("Hello")
-})
+import router from "./routes/index.mjs";
 
-app.listen(5000,()=>{
-    console.log('app is running');
-})
+const app = express();
+app.use(cookieParser());
+app.use(express.json());
+app.use('/', router)
+
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT, console.log(`Listening on port ${PORT}! Now its up to you...`));
