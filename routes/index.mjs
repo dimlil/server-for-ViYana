@@ -3,22 +3,26 @@ import { validationResult } from "express-validator";
 import { verifyUser } from "../controllers/auth.mjs";
 import { login } from "../controllers/login.mjs";
 import { loginVerification } from "../verifications/login.mjs";
-import Post from '../models/post.mjs'
+import Post from "../models/post.mjs";
 const router = Router();
 
 router.get("/", async (req, res) => {
   res.send("Hello");
 });
+router.get("/api/allPosts", async (req, res) => {
+  const posts = await Post.find();
+  res.send(posts);
+});
 router.post("/api/create", verifyUser, async (req, res) => {
   const { title, content } = req.body;
-  const newPost= new Post({
+  const newPost = new Post({
     title,
-    content
-  })
+    content,
+  });
   try {
-    await newPost.save()
+    await newPost.save();
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
   res.status(201).send("ok");
 });
