@@ -2,7 +2,7 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import router from "./routes/index.mjs";
 import dotenv from 'dotenv'
-import mongoose from "mongoose";
+import { conectingToDataBase } from "./db-conection.mjs";
 
 dotenv.config();
 
@@ -11,15 +11,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use('/', router);
 
-mongoose.connect(process.env.DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, (err) => {
-    if (err) {
-        console.error(err);
-        throw err;
-    }
-})  
+conectingToDataBase()
 
 const PORT = process.env.PORT || 5000
 
