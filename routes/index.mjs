@@ -9,10 +9,7 @@ router.get("/", async (req, res) => {
   res.send("Hello");
 });
 router.post("/api/create", verifyUser, (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.send(errors.array()[0].msg);
-  }
+ 
   res.send("ok");
 });
 router.post("/api/login", loginVerification, login, (req, res) => {

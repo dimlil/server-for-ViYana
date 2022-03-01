@@ -1,30 +1,14 @@
-import { body } from "express-validator";
 import users from "../models/user.mjs";
-import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-export const verifyUser = [
-  body(
-    "email",
-    "The email should be in following format (mailbox @ domainname)"
-  )
-    .isEmail()
-    .custom(async (email) => {
-      const user = await users.findOne({ email });
-      if (!user) {
-        throw new Error("Email is not found");
-      }
-      return true;
-    }),
-  body(
-    "password",
-    "The password should be at least 4 characters long and should consist only english letters and digits"
-  ).custom(async (password,{req}) => {
-    const email= req.body.email;
-    const user = await users.findOne({ email });
-    const status = await bcrypt.compare(password, user.password);
-    if (!status) {
-      throw new Error("Wrong password");
-    }
-    return true;
-  }),
-];
+export const verifyUser = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401).send("Please login.");
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403).send(error.message);
+    req.user = user;
+    next();
+  });
+};
