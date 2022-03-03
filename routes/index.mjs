@@ -32,6 +32,11 @@ router.post("/api/login", loginVerification, login, (req, res) => {
     return res.send(errors.array()[0].msg);
   }
   const token = req.body.token;
-  res.send(token);
+  res.status(200).cookie('aid',token,{
+    sameSite: true,
+    path: '/',
+    httpOnly: true,
+    maxAge: 2 * 60 * 60 * 1000
+  }).send(token);
 });
 export default router;
