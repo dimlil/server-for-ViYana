@@ -24,7 +24,7 @@ router.post("/api/create", verifyUser, async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-  res.status(201).send("ok");
+  res.status(201).send("post is successfully created");
 });
 router.post("/api/login", loginVerification, login, (req, res) => {
   const errors = validationResult(req);
@@ -32,11 +32,12 @@ router.post("/api/login", loginVerification, login, (req, res) => {
     return res.send(errors.array()[0].msg);
   }
   const token = req.body.token;
+  const email = req.body.email;
   res.status(200).cookie('aid',token,{
     sameSite: true,
     path: '/',
     httpOnly: true,
-    maxAge: 2 * 60 * 60 * 1000
-  }).send(token);
+    maxAge: 60 * 60 * 1000
+  }).send(`User ${email} is successfully logged in`);
 });
 export default router;
