@@ -14,6 +14,7 @@ export const login = async (req, res, next) => {
       throw new Error("Wrong password");
     }
     const token = await jwt.sign(email, process.env.TOKEN_SECRET);
+    req.body.email = email;
     req.body.token = token;
     next();
   } catch (error) {
