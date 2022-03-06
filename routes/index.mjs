@@ -11,12 +11,13 @@ router.get("/", async (req, res) => {
 });
 router.get("/api/allPosts", async (req, res) => {
   const posts = await Post.find();
-  res.send(posts);
+  res.status(200).send(posts);
 });
 router.post("/api/create", verifyUser, async (req, res) => {
-  const { title, content } = req.body;
+  const { title, about, content } = req.body;
   const newPost = new Post({
     title,
+    about,
     content,
   });
   try {
@@ -33,11 +34,14 @@ router.post("/api/login", loginVerification, login, (req, res) => {
   }
   const token = req.body.token;
   const email = req.body.email;
-  res.status(200).cookie('aid',token,{
-    sameSite: true,
-    path: '/',
-    httpOnly: true,
-    maxAge: 60 * 60 * 1000
-  }).send(`User ${email} is successfully logged in`);
+  res
+    .status(200)
+    .cookie("aid", token, {
+      sameSite: true,
+      path: "/",
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000,
+    })
+    .send(`User ${email} is successfully logged in`);
 });
 export default router;
