@@ -13,6 +13,15 @@ router.get("/api/allPosts", async (req, res) => {
   const posts = await Post.find();
   res.status(200).send(posts);
 });
+router.get("/api/post/:id", async (req, res) => {
+  try {
+    const post = await Post.find({"_id": req.params.id});
+    res.status(200).send(post);
+  } catch (error) {
+    res.status(404).send(`The post is not found please check ID. Error: ${error.message}`); 
+  }
+  
+});
 router.post("/api/create", verifyUser, async (req, res) => {
   const { title, about, content } = req.body;
   const newPost = new Post({
