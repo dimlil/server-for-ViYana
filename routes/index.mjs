@@ -15,12 +15,13 @@ router.get("/api/allPosts", async (req, res) => {
 });
 router.get("/api/post/:id", async (req, res) => {
   try {
-    const post = await Post.find({"_id": req.params.id});
+    const post = await Post.find({ _id: req.params.id });
     res.status(200).send(post);
   } catch (error) {
-    res.status(404).send(`The post is not found please check ID. Error: ${error.message}`); 
+    res
+      .status(404)
+      .send(`The post is not found please check ID. Error: ${error.message}`);
   }
-  
 });
 router.post("/api/create", verifyUser, async (req, res) => {
   const { title, about, content } = req.body;
@@ -52,5 +53,15 @@ router.post("/api/login", loginVerification, login, (req, res) => {
       maxAge: 60 * 60 * 1000,
     })
     .send(`User ${email} is successfully logged in`);
+});
+router.post("/api/logout", (req, res) => {
+  try {
+    res
+      .clearCookie("aid", { path: "/" })
+      .status(200)
+      .send("Successfully logged out");
+  } catch (error) {
+    res.status(400).send(`Error: ${error}`);
+  }
 });
 export default router;
