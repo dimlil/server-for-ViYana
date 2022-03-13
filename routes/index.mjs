@@ -38,10 +38,9 @@ router.post("/api/create", verifyUser, async (req, res) => {
   res.status(201).send("post is successfully created");
 });
 router.delete("/api/delete/:id", verifyUser, async (req, res) => {
-  const post = await Post.find({ _id: req.params.id });
   try {
-    const post = await Post.deleteOne({ _id: req.params.id });
-    res.status(200).send('Post is successfully deleted');
+    await Post.deleteOne({ _id: req.params.id });
+    res.status(200).send("Post is successfully deleted");
   } catch (error) {
     res
       .status(404)
