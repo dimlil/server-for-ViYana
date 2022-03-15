@@ -47,6 +47,20 @@ router.delete("/api/delete/:id", verifyUser, async (req, res) => {
       .send(`The post is not found please check ID. Error: ${error.message}`);
   }
 });
+router.put("/api/edit/:id", verifyUser, async (req, res) => {
+  const { title, about, content } = req.body;
+  try {
+    await Post.updateOne(
+      { _id: req.params.id },
+      { $set: { title, about, content } }
+    );
+    res.status(200).send("Post is successfully edited");
+  } catch (error) {
+    res
+      .status(404)
+      .send(`The post is not found please check ID. Error: ${error.message}`);
+  }
+});
 router.post("/api/login", loginVerification, login, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
